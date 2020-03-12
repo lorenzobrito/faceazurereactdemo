@@ -5,11 +5,12 @@ import 'react-html5-camera-photo/build/css/index.css';
 import './App.css';
 import axios from 'axios';
 function Camaraupload() {
-  const apiUrl = "https://localhost:5001/faceapi";
+  const apiUrl = "https://apifacelorbrito.azurewebsites.net/api/faceapi?code=LSPc9n6WBiC33f2u9GFlvrygmfLEVcw4OJgeDVaYMPJIBig6yKv6yA==";
   const [username, setName] = useState('');
   
     function handleTakePhoto (dataUri) {
-        axios.post(apiUrl, {  dataUri: dataUri,
+        axios.post(apiUrl, { 
+           dataUri: dataUri,
         name : username })
           .then(res => {
             console.log(res);
@@ -22,7 +23,7 @@ function Camaraupload() {
         <div>
             <div>
         <Camera
-          onTakePhoto = {handleInputChange}
+          onTakePhoto = {handleTakePhoto}
         />
         </div>
         <input
