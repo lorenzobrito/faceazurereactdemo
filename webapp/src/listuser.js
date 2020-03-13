@@ -3,23 +3,9 @@ import ReactDOM from 'react-dom';
 import './App.css';
 import axios from 'axios';
 function ListUser() {
-  const apiUrl = "https://localhost:5001/faceapi";
+  const apiUrl = "https://apifacelorbrito.azurewebsites.net/api/faceapi?code=LSPc9n6WBiC33f2u9GFlvrygmfLEVcw4OJgeDVaYMPJIBig6yKv6yA==";
   const [List, setList] = useState([]);
-    function handleTakePhoto (dataUri) {
-        // Do stuff with the photo...
-      
-        const user = {
-          dataUri: dataUri,
-          name : 'lorenzo'
-        };
     
-        axios.post(`https://localhost:5001/faceapi`, {  dataUri: dataUri,
-        name : 'lorenzo' })
-          .then(res => {
-            console.log(res);
-            console.log(res.data);
-          })
-      }
       useEffect(() => {
         console.log('calling use');
         const fetchData = async () => {
@@ -33,8 +19,9 @@ function ListUser() {
      
       return (
         <div>
+      
        {List.map((item,index)=>{
-              return  <div key={index}><img src={item.dataUri} ></img></div>
+              return  <div key={index}>{item}</div>
        })}
         </div>
       );

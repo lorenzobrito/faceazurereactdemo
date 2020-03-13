@@ -34,7 +34,7 @@ function App() {
       <button onClick={() => setComponet(1)}>Take Picture</button>
       <button onClick={() => setComponet(2)}>Reconition</button>
       <button onClick={() => setComponet(3)}>List user</button>
-        <p>You clicked {component} times</p>
+        
         {showcomponent}
       </div>
     </div>
