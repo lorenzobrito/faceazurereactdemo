@@ -7,6 +7,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using apiface2;
+using DtoModels;
 
 namespace faceapifunctions
 {
@@ -23,17 +25,32 @@ namespace faceapifunctions
 
             if (req.Method.Equals("POST", StringComparison.InvariantCultureIgnoreCase))
             {
-                var user =await new faceapilogic().getUser(req.Body);
-                return new OkObjectResult(user);
-            }
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            
-            string responseMessage = string.IsNullOrEmpty(requestBody)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {requestBody}. This HTTP triggered function executed successfully.";
+                try
+                {
+                    var copy = await new faceapilogic().getUser(req.Body);
+                    copy.dataUri = await BlobStorage.UploadText(copy);
+                    var user = new User(copy);    
+                    var table = await Settings.CreateTableAsync();
+                   
+                    var result = await Settings.InsertOrMergeEntityAsync(table, user);
+                    return new OkObjectResult(result);
+                }
+                catch (Exception ex)
+                {
 
-            return new OkObjectResult(responseMessage);
+                   return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
+           
+            }
+            string containerquery = req.Query["container"];
+            if (!string.IsNullOrEmpty(containerquery))
+            {
+                return new OkObjectResult(containerquery);
+            }
+            var  containers = await new  BlobStorage().getListContainers();
+           
+
+            return new OkObjectResult(containers);
         }
     }
 }
