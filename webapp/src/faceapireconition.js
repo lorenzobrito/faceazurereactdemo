@@ -14,7 +14,10 @@ function Facereconition() {
        console.log(res);
        console.log(res.data);
        setResult(res.data);
-     })
+     }).catch(function (error) {
+      console.log(error.response.statusText);
+      setResult(error.response.statusText);
+ });
   }
   return (
     <div>
