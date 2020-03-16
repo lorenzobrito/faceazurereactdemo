@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using apiface2;
 using DtoModels;
+using System.Collections.Generic;
 
 namespace faceapifunctions
 {
@@ -45,7 +46,9 @@ namespace faceapifunctions
             string containerquery = req.Query["container"];
             if (!string.IsNullOrEmpty(containerquery))
             {
-                return new OkObjectResult(containerquery);
+                var table = await Settings.CreateTableAsync();
+                var list = new Settings().getListFiles(table,containerquery);
+                return new OkObjectResult(list);
             }
             var  containers = await new  BlobStorage().getListContainers();
            

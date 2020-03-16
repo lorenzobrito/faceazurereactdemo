@@ -9,12 +9,17 @@ using System.Text;
 using System.Threading.Tasks;
 using CloudStorageAccount = Microsoft.Azure.Cosmos.Table.CloudStorageAccount;
 using StorageException = Microsoft.Azure.Cosmos.Table.StorageException;
-
+using System.Linq;
 namespace apiface2
 {
   public  class Settings
     {
-        public static string storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=nominashtlml;AccountKey=Yv37qkHCllh5MhwOu20RtURNkPqUg5SUf+M6Bnnm9hX6CluD+r+aOlVrZllL7y6giUKbBWUxfSYUj0AvGl46tQ==;EndpointSuffix=core.windows.net";
+        public string storageConnectionString_= Environment.GetEnvironmentVariable("BLOBSTORAGEAPIFACEDETECTION");
+        public static string storageConnectionString {
+            get {
+                return new Settings().storageConnectionString_;
+            }
+        }
 
          static CloudStorageAccount CreateStorageAccountFromConnectionString()
         {
@@ -95,8 +100,25 @@ namespace apiface2
                 throw;
             }
         }
+        public async Task<IEnumerable<string>> getListFiles( string partition)
+        {
+            var cloudstorage = CreateStorageAccountFromConnectionString();
+            var cloudtable =await CreateTableAsync();
+            return getListFiles(cloudtable, partition);
+        }
+        public  IEnumerable<string> getListFiles(CloudTable table,string partition)
+        {
 
-       
+            var query = new TableQuery<User>().Where(
+  TableQuery.GenerateFilterCondition(
+    "PartitionKey",
+    QueryComparisons.Equal,
+    partition
+  )
+);
+        var result=   table.ExecuteQuery<User>(query);
+           return result.Select(t => t.dataUri);
+        }
 
     }
 }

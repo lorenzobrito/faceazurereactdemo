@@ -33,6 +33,7 @@ namespace apiface2
             var containersname = containers.Select(t => t.Name).Where(t=>t!= "$web");
             return containersname;
         }
+        
         public async Task<string> getUriFromBlobAsync(string container, string name)
         {
             //This will create the storage account to get the details of account.
