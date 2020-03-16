@@ -5,7 +5,7 @@ import ListUser from './listuser';
 import Facereconition from './faceapireconition';
 import Camaraupload from './uploadcamara'
 function App() {
-  const [component, setComponet] = useState(1);
+  const [component, setComponet] = useState(2);
   let showcomponent=null;
 
   if (component===1) {
